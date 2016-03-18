@@ -1,15 +1,34 @@
-/**
- * Copyright (c) 2011 The Chromium Authors. All rights reserved.
- * Use of this source code is governed by a BSD-style license that can be
- * found in the LICENSE file.
- */
+
+@text-color: rgb(70, 60, 60);
+@text-secondary-color: lighten(@text-color, 33%);
 
 body {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
-#map {
-  width: 512px;
-  height: 512px;
+.app {
+  margin: 1rem;
+  width: 20rem;
+  color: @text-color;
+  height: 400px;
+
+  &-header {
+    font-size: 1.75rem;
+    margin: 1rem 0;
+    font-weight: 300;
+  }
+}
+
+.history {
+  &-item {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background-color: rgb(247, 247, 247);
+    border-radius: 0.125rem;
+
+    &-variations {
+      color: @text-secondary-color;
+    }
+  }
 }
