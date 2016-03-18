@@ -1,9 +1,11 @@
 
 const storage = chrome.storage.local;
-const CART_CONTAINER_CLASS = 'desktop-cart-container'; // added to page
 const CART_CLASS = 'desktop-cart'; // div with vendor data
 const CART_ORDER_CLASS = 'desktop-cart__order'; // div with orders
 const CART_ITEM_CLASS = 'summary__item__name'; // div order item
+const CHECKOUT_BUTTON_ID = 'checkout-finish-and-pay-button';
+const CHECKOUT_CLASS = 'checkout';
+const CHECKOUT_BUTTON_DISABLED_CLASS = 'button--disabled';
 
 function addItemsToHistory(items) {
   storage.get('history', (result) => {
@@ -45,37 +47,50 @@ function parseItemNode({ childNodes }) {
   return { label, variations };
 }
 
-function processOrder(order) {
-  // cart found, looking for items in it
-  const items = Array.prototype.map.call(order.getElementsByClassName(CART_ITEM_CLASS),
-    parseItemNode);
+function processOrder() {
+  const orders = document.getElementsByClassName(CART_ORDER_CLASS);
+  Array.prototype.forEach.call(orders, order => {
+    // cart found, looking for items in it
+    const items = Array.prototype.map.call(order.getElementsByClassName(CART_ITEM_CLASS),
+      parseItemNode);
 
-  // getting vendor metadata
-  let vendor = null;
-  const carts = document.getElementsByClassName(CART_CLASS);
-  Array.prototype.forEach.call(carts, (cart) => {
-    vendor = JSON.parse(cart.dataset.vendor);
+    // getting vendor metadata
+    let vendor = null;
+    const carts = document.getElementsByClassName(CART_CLASS);
+    Array.prototype.forEach.call(carts, (cart) => {
+      vendor = JSON.parse(cart.dataset.vendor);
+    });
+
+    // save order in history
+    if (vendor !== null && items.length > 0) {
+      addItemsToHistory(items.map((item) => makeHistoryItem(item, vendor)));
+    } else {
+      console.log('No vendor or items found');
+    }
   });
+}
 
-  // save order in history
-  if (vendor !== null && items.length > 0) {
-    addItemsToHistory(items.map((item) => makeHistoryItem(item, vendor)));
-  } else {
-    console.log('No vendor or items found');
+function handleClickCheckout(ev) {
+  const testing = true;
+  if (testing === ev.currentTarget.classList.contains(CHECKOUT_BUTTON_DISABLED_CLASS)) {
+    processOrder();
   }
 }
 
 /**
- * Start a DOM mutation observer that looks for a shopping cart
+ * Start a DOM mutation observer that looks for elements appearing
  */
-function startCartObserver() {
+function startDOMObserver() {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((record) => {
       Array.prototype.forEach.call(record.addedNodes, (node) => {
-        if (node.nodeType === node.ELEMENT_NODE && node.className === CART_CONTAINER_CLASS) {
-          // check if the cart appeared
-          const orders = node.getElementsByClassName(CART_ORDER_CLASS);
-          Array.prototype.forEach.call(orders, processOrder);
+        if (node.nodeType === node.ELEMENT_NODE && node.classList.contains(CHECKOUT_CLASS)) {
+          const checkoutButton = document.getElementById(CHECKOUT_BUTTON_ID);
+          if (checkoutButton) {
+            console.log('checkout button appeared, registering order handler');
+            // TODO unregister when going back
+            checkoutButton.addEventListener('click', handleClickCheckout);
+          }
         }
       });
     });
@@ -89,4 +104,4 @@ function startCartObserver() {
 
 storage.clear();
 // kick things off by starting observer
-startCartObserver();
+startDOMObserver();
