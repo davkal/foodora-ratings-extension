@@ -10,7 +10,9 @@
   },
   "rules": {
     "comma-dangle": 0,
-    "new-cap": [2, { "capIsNewExceptions": ["List", "OrderedMap"] }]
+    "new-cap": [2, { "capIsNewExceptions": ["List", "OrderedMap"] }],
+    "react/jsx-closing-bracket-location": 0,
+    "react/prop-types": 0
   },
   "plugins": [
     "react"

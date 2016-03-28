@@ -1,6 +1,7 @@
 
 @text-color: rgb(70, 60, 60);
 @text-secondary-color: lighten(@text-color, 33%);
+@primary-color: darken(#d706f4, 3%);
 
 body {
   margin: 0;
@@ -30,5 +31,19 @@ body {
     &-variations {
       color: @text-secondary-color;
     }
+
+    &-ratings {
+      float: right;
+    }
+  }
+}
+
+.star {
+  fill: @primary-color;
+  fill-opacity: 0.3;
+  cursor: pointer;
+
+  &.rated {
+    fill-opacity: 1;
   }
 }

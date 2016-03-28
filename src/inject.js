@@ -19,15 +19,16 @@ function addItemsToHistory(items) {
   });
 }
 
-function makeHistoryItem(item, vendor) {
+function makeHistoryItem(item, vendor, ts, orderId) {
   return {
+    orderId,
     label: item.label,
     variations: item.variations,
     vendorId: vendor.id,
     vendorCode: vendor.code,
     vendorName: vendor.name,
     vendorCategory: vendor.category,
-    addedAt: +new Date
+    addedAt: ts
   };
 }
 
@@ -63,7 +64,9 @@ function processOrder() {
 
     // save order in history
     if (vendor !== null && items.length > 0) {
-      addItemsToHistory(items.map((item) => makeHistoryItem(item, vendor)));
+      const now = +new Date;
+      const orderId = `${vendor.id}-${now}`;
+      addItemsToHistory(items.map((item) => makeHistoryItem(item, vendor, now, orderId)));
     } else {
       console.log('No vendor or items found');
     }
@@ -71,7 +74,7 @@ function processOrder() {
 }
 
 function handleClickCheckout(ev) {
-  const testing = true;
+  const testing = false;
   if (testing === ev.currentTarget.classList.contains(CHECKOUT_BUTTON_DISABLED_CLASS)) {
     processOrder();
   }
@@ -102,6 +105,6 @@ function startDOMObserver() {
   });
 }
 
-storage.clear();
+// storage.clear();
 // kick things off by starting observer
 startDOMObserver();
