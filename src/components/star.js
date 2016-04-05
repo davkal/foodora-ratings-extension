@@ -1,5 +1,4 @@
 import React from 'react';
-import cx from 'classnames';
 
 const STAR_PATH = 'M18.447,7.694l-4.024,3.942l0.952,5.539c0,0.049,0,0.127,0,0.227'
   + 'c0,0.156-0.037,0.287-0.118,0.387'
@@ -23,27 +22,30 @@ export default class Star extends React.Component {
   handleClick(ev) {
     ev.preventDefault();
     if (this.props.onItemClick) {
-      this.props.onItemClick(this.props.item);
+      this.props.onItemClick(this.props.value, this.props.payload);
     }
   }
 
   handleMouseOver(ev) {
     ev.preventDefault();
     if (this.props.onItemMouseOver) {
-      this.props.onItemMouseOver(this.props.item);
+      this.props.onItemMouseOver(this.props.value);
     }
   }
 
   render() {
-    const { item, rating, size } = this.props;
-    const transform = `translate(${(item - 1) * size}, 0)`;
-    const className = cx({
-      star: true,
-      rated: item <= rating
-    });
+    const { rating, size, value } = this.props;
+    const transform = `translate(${(value - 1) * size}, 0)`;
+    const style = {
+      fill: '#d706f4',
+      fillOpacity: 0.3
+    };
+    if (value <= rating) {
+      style.fillOpacity = 1;
+    }
 
     return (
-      <path className={className} transform={transform} d={STAR_PATH}
+      <path style={style} transform={transform} d={STAR_PATH}
         onClick={this.handleClick} onMouseOver={this.handleMouseOver} />
     );
   }

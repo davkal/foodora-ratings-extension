@@ -1,6 +1,7 @@
 
 @text-color: rgb(70, 60, 60);
 @text-secondary-color: lighten(@text-color, 33%);
+@text-tertiary-color: lighten(@text-color, 45%);
 @primary-color: darken(#d706f4, 3%);
 
 body {
@@ -22,11 +23,21 @@ body {
 }
 
 .history {
-  &-item {
+  &-order {
     margin: 0.5rem 0;
     padding: 0.5rem 1rem;
     background-color: rgb(247, 247, 247);
     border-radius: 0.125rem;
+
+    &-vendor {
+      font-size: 0.9rem;
+      color: @text-tertiary-color;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  &-item {
+    clear: both;
 
     &-variations {
       color: @text-secondary-color;
