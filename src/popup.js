@@ -85,14 +85,26 @@ class App extends React.Component {
 
   render() {
     const items = groupByOrderId(this.state.history);
-    console.log(items);
+    const hasItems = items.length > 0;
     return (
       <div className="app">
         <div className="app-header">Foodora Order History</div>
         <div className="app-section">
-          <div className="history">
+          {hasItems && <div className="history">
             {items.map(order => this.renderOrder(order))}
-          </div>
+          </div>}
+          {!hasItems && <div className="empty">
+            <p>No foodora orders found. To get started:</p>
+            <ol>
+              <li>Order something on foodora on a browser that has this extension installed.</li>
+              <li>The order items will be stored automatically.</li>
+              <li>Click on the browser extension's icon to see a list of your orders here.</li>
+              <li>Rate the food.</li>
+            </ol>
+            <p>Next time you view the restaurant menu in Foodora you will see the
+              rating next to the items on the menu.</p>
+          </div>}
+          <div className="footer">Foodora Ratings Extension, see code on <a href="https://github.com/davkal/foodora-ratings-extension" target="_blank">GitHub</a></div>
         </div>
       </div>
     );
